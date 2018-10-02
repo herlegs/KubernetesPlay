@@ -1,0 +1,12 @@
+prerequisites:
+
+1. docker must be installed
+    https://docs.docker.com/
+2. virtual box must be installed
+    https://www.virtualbox.org/wiki/Downloads
+3. minikube must be installed
+    "brew cask install minikube" or https://kubernetes.io/docs/tasks/tools/install-minikube/
+4. kubectl must be installed
+    "brew install kubernetes-cli" or https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
+
