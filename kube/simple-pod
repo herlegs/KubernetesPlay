@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: singlepod
+  labels:
+    app: singlepod
+spec:
+  containers:
+  - name: hellocontainer
+    image: stardust1991/hellomain
+    imagePullPolicy: Always
+    ports:
+      - name: http
+        containerPort: 8080
+    resources:
+      limits:
+        cpu: 0.2
+        memory: "10Mi"

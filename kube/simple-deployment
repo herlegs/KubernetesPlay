@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hellodeployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: helloapp
+    spec:
+      containers:
+      - name: hellocontainer
+        image: stardust1991/hellomain
+        resources:
+          requests:
+            cpu: 100m
+            memory: 10Mi
+        ports:
+        - containerPort: 8080
