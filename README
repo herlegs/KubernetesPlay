@@ -19,11 +19,12 @@ kubectl cluster-info (or "minikube ip")
 We will write a simple go server program to simulate our micro-service.
 In ./siplehttpserver we created an go server will reply "Hello {/path}, I'm {IP address}".
 
-// build a simple go server docker image. Or just run "cd ./docker && ./run.sh"
+You don't have to build docker image here, this is just to demonstrate the process
+// build a simple go server docker image. Or just run "cd ./docker && ./buildSimpleServer.sh"
+(If you encountered "golang.org/x/sys/unix not found", run "go get golang.org/x/sys/unix")
 CGO_ENABLED=0 GOOS=linux go build -a -o main simplehttpserver
 // tag and push the image to docker hub
-// please use your own username, and the tag will be needed in the next steps
-docker build -t stardust1991/hellomain -f Dockerfile .
+docker build -t stardust1991/hellomain -f SimpleDockerfile .
 docker push stardust1991/hellomain
 rm main
 
@@ -58,4 +59,9 @@ So we can access our go server endpoint in several ways:
     and in another terminal run "curl 127.0.0.1:8888/anything"
 
 We will observe the requests are load balanced from the IP address in server's response.
+
+Let's explore how the services communication happens in kubernetes . For this purpose we will host another go grpc server, which has an API to count bytes in string.
+Implementation is under ./simplegrpcserver, our previous simple http server will call the grpc server, just to count the byte of a string (the url path)
+
+In ./docker folder, we build and push the grpc server image similarly.
 

@@ -2,7 +2,7 @@
 
 CGO_ENABLED=0 GOOS=linux go build -a -o main ../simplehttpserver
 
-docker build -t stardust1991/hellomain -f Dockerfile .
+docker build -t stardust1991/hellomain -f SimpleDockerfile .
 
 rm main
 
