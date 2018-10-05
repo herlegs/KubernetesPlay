@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: backenddeployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backendapp
+  template:
+    metadata:
+      labels:
+        app: backendapp
+    spec:
+      containers:
+      - name: backendcontainer
+        image: stardust1991/grpcserver:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 10Mi
+        ports:
+        - name: http-port
+          containerPort: 8080
+        - name: grpc-port
+          containerPort: 10000

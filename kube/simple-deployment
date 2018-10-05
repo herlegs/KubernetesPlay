@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: hellocontainer
-        image: stardust1991/hellomain:latest
+        image: stardust1991/hellomain
         imagePullPolicy: Always
         resources:
           requests:

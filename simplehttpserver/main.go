@@ -1,11 +1,11 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"math/rand"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -20,11 +20,11 @@ var (
 	machineIP string
 	getIPOnce sync.Once
 
-	counterServerAddr = flag.String("counter_server", "localhost:10000", "address of counter server")
+	counterServerAddr string
 )
 
 func main() {
-	flag.Parse()
+	counterServerAddr = fmt.Sprintf("%v:%v", os.Getenv("BACKENDSERVICE_SERVICE_HOST"), os.Getenv("BACKENDSERVICE_SERVICE_PORT_GRPC_PORT"))
 	fmt.Printf("starting hello server at [%v]...\n", getIPAddr())
 	http.HandleFunc("/", hello)
 	if err := http.ListenAndServe(":8080", nil); err != nil {
@@ -81,15 +81,15 @@ func randomString() string {
 }
 
 func callCounterServer(input string) string {
-	failMsgTmpl := "Failed to call counter server: %v"
-	conn, err := grpc.Dial(*counterServerAddr, grpc.WithInsecure())
+	failMsgTmpl := "Failed to [%v] counter server[%v]: %v"
+	conn, err := grpc.Dial(counterServerAddr, grpc.WithInsecure())
 	if err != nil {
-		return fmt.Sprintf(failMsgTmpl, err)
+		return fmt.Sprintf(failMsgTmpl, "Dail", counterServerAddr, err)
 	}
 	client := pb.NewCounterClient(conn)
 	resp, err := client.Count(context.Background(), &pb.CountRequest{Message: input})
 	if err != nil {
-		return fmt.Sprintf(failMsgTmpl, err)
+		return fmt.Sprintf(failMsgTmpl, "Call", counterServerAddr, err)
 	}
 	return fmt.Sprintf("Counter server says: %v", resp.Length)
 }
