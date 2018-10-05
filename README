@@ -14,7 +14,7 @@ prerequisites:
 minikube start
 
 // use this to view the vm ip address (ssh username: docker, password: tcuser)
-kubectl cluster-info
+kubectl cluster-info (or "minikube ip")
 
 We will write a simple go server program to simulate our micro-service.
 In ./siplehttpserver we created an go server will reply "Hello {/path}, I'm {IP address}".
