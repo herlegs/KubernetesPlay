@@ -1,0 +1,54 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "counter.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/{message}": {
+      "get": {
+        "operationId": "Count",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCountResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "message",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Counter"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "pbCountResponse": {
+      "type": "object",
+      "properties": {
+        "length": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

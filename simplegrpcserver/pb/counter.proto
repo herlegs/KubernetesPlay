@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/api/annotations.proto";
+
+service Counter {
+    rpc Count(CountRequest) returns (CountResponse) {
+        option (google.api.http) = {
+            get: "/{message}"
+        };
+    }
+}
+
+message CountRequest {
+    string message = 1;
+}
+
+message CountResponse {
+    int64 length = 1;
+}
