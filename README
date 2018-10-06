@@ -65,3 +65,19 @@ Implementation is under ./simplegrpcserver, our previous simple http server will
 
 In ./docker folder, we build and push the grpc server image similarly.
 
+we will deploy the counter service the same way (here we name it as backenddeployment)
+kubectl create -f backend-deployment --save-config (under folder ./kube)
+
+and create service for the counter server:
+kubectl create -f backend-service --save-config
+
+in the simple service program, the server will get the backendservice address from the environment variable, BACKENDSERVICE_SERVICE_HOST and BACKENDSERVICE_SERVICE_PORT_GRPC_PORT
+and kubernetes will do the routing to the counter server.
+when we query the simple server, the response will be:
+➜  kube git:(master) ✗ curl 192.168.99.101:30001/myname
+Hello myname, I'm 172.17.0.9. Counter server says: 6
+
+
+
+
+
