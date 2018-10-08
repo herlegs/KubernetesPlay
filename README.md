@@ -1,9 +1,9 @@
 This project is to explore a kubernetes + envoy/istio integration. In the first part we will explore the basic infrastructure
 of a kubernetes cluster.
 
-####Micro-service in Kubernetes
+#### Micro-service in Kubernetes
 
-#####Tools prerequisites:
+##### Tools prerequisites:
 
 1.  docker must be installed  
     https://docs.docker.com/
@@ -14,9 +14,9 @@ of a kubernetes cluster.
 4. kubectl must be installed  
     __brew install kubernetes-cli__ or https://kubernetes.io/docs/tasks/tools/install-kubectl/
 
-#####Steps
+##### Steps
 
-#####1). Service deployment with replicas
+##### 1). Service deployment with replicas
 
 this will create a vm running kubernetes master
 >__minikube start__
@@ -71,7 +71,7 @@ So we can access our go server endpoint in several ways:
 
 We will observe the requests are load balanced from the IP address in server's response.
 
-#####2). Service communication
+##### 2). Service communication
 Let's explore how the services communication happens in kubernetes . For this purpose we will host another go grpc server, which has an API to count bytes in string.
 Implementation is under ./simplegrpcserver.  
 Our previous simple http server will call the grpc server, just to count the byte of the url path
