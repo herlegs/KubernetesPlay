@@ -86,6 +86,12 @@ and create service for the counter server:
 
 in the simple service program, the server will get the backendservice address from the environment variable:  
 BACKENDSERVICE_SERVICE_HOST and BACKENDSERVICE_SERVICE_PORT_GRPC_PORT  
+To view the environment variables you can use this command:
+>kubectl exec yourpod -- printenv  
+//since our go server image is scratch (empty) image you can deploy pod with other images, eg.:  
+>kubectl create -f ./kube/pod-with-env  
+>kubectl exec monolith -- printenv  
+
 and kubernetes will do the routing to the counter server.  
 when we query the simple server, the response will be:  
 >➜  kube git:(master) ✗ curl 192.168.99.101:30001/myname  
