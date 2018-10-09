@@ -44,9 +44,11 @@
     "pbCountResponse": {
       "type": "object",
       "properties": {
-        "length": {
-          "type": "string",
-          "format": "int64"
+        "address": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
         }
       }
     }

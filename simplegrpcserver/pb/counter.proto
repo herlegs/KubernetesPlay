@@ -17,5 +17,6 @@ message CountRequest {
 }
 
 message CountResponse {
-    int64 length = 1;
+    string address = 1;
+    string message = 2;
 }
