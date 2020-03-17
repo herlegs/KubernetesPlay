@@ -1,9 +1,13 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hellodeployment
+  namespace: test
 spec:
   replicas: 3
+  selector:
+    matchLabels:
+      app: helloapp
   template:
     metadata:
       labels:
@@ -11,7 +15,7 @@ spec:
     spec:
       containers:
       - name: hellocontainer
-        image: stardust1991/hellomain:latest
+        image: stardust1991/hellomain
         imagePullPolicy: Always
         resources:
           requests:
