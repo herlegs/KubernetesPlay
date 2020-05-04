@@ -4,7 +4,7 @@ metadata:
   name: hellodeployment
   namespace: test
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: helloapp
@@ -13,13 +13,14 @@ spec:
       labels:
         app: helloapp
     spec:
+      serviceAccount: hello
       containers:
-      - name: hellocontainer
-        image: stardust1991/hellomain
+      - name: helloc
+        image: stardust1991/hellomain:latest
         imagePullPolicy: Always
         resources:
           requests:
             cpu: 100m
-            memory: 10Mi
+            memory: 100Mi
         ports:
         - containerPort: 8080

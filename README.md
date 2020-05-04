@@ -97,7 +97,5 @@ when we query the simple server, the response will be:
 >➜  kube git:(master) ✗ curl 192.168.99.101:30001/myname  
 >Hello myname, I'm 172.17.0.9. Counter server says: 6  
 
-
-
-
-
+Useful commands:
+./docker/buildSimpleServer.sh && kubectl apply -f ./kube/simple-deployment
