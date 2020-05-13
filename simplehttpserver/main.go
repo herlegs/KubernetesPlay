@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/herlegs/KubernetesPlay/simplehttpserver/monitor"
+	"github.com/herlegs/ConsulPlay/kv/consul"
 
 	"github.com/herlegs/KubernetesPlay/serverutil"
 
@@ -23,7 +23,8 @@ var podCount = 1
 
 func main() {
 	fmt.Printf("before init...\n")
-	monitor.InitResouceMonitor("coban-prd8")
+	go initConsulLoop()
+	//monitor.InitResouceMonitor("coban-prd8")
 	fmt.Printf("starting hello server [%v] at [%v]...\n", version, serverutil.GetIPAddr())
 	http.HandleFunc("/", hello)
 	if err := http.ListenAndServe(":8080", nil); err != nil {
@@ -51,4 +52,29 @@ func callCounterServerViaK8S(input string) string {
 		return fmt.Sprintf(failMsgTmpl, "Call", counterServerAddr, err)
 	}
 	return fmt.Sprintf("Counter server[%v] says: %v", resp.Address, resp.Message)
+}
+
+// initConsulLoop
+func initConsulLoop() {
+	store, err := consul.NewConsulKVStore()
+	if err != nil {
+		fmt.Printf("error init new consul client:%v\n", err)
+		return
+	}
+	t := time.NewTicker(time.Second * 15)
+	bytes, err := store.Get("test-key")
+	if err != nil {
+		fmt.Printf("error get key from consul:%v\n", err)
+	} else {
+		fmt.Printf("get key value:%v\n", string(bytes))
+	}
+
+	for range t.C {
+		bytes, err := store.Get("test-key")
+		if err != nil {
+			fmt.Printf("error get key from consul:%v\n", err)
+		} else {
+			fmt.Printf("get key value:%v\n", string(bytes))
+		}
+	}
 }

@@ -1,24 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hellodeployment
+  name: curltest
   namespace: test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: helloapp
+      app: curlapp
   template:
     metadata:
       labels:
-        app: helloapp
-      annotations:
-        "consul.hashicorp.com/connect-inject": "true"
+        app: curlapp
     spec:
       serviceAccount: hello
       containers:
-      - name: helloc
-        image: stardust1991/hellomain:latest
+      - name: curlc
+        image: ubuntu
         imagePullPolicy: Always
         resources:
           requests:
