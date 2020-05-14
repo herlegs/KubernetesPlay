@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadtestdeployment
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadtest
+  template:
+    metadata:
+      labels:
+        app: loadtest
+    spec:
+      containers:
+      - name: tester
+        image: stardust1991/loadtest:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+          - name: ENDPOINT
+            value: "http://helloservice.test.svc:7777"
+          - name: WORKERS
+            value: "10"
+          - name: TOTAL_QPS_LIMIT
+            value: "5"
+          - name: STATS_INTERVAL_SECONDS
+            value: "5"
+
