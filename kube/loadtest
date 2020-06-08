@@ -23,11 +23,11 @@ spec:
             memory: 100Mi
         env:
           - name: ENDPOINT
-            value: "http://helloservice.test.svc:7777"
+            value: "http://food-order-batching.food-services.svc:8888"
           - name: WORKERS
             value: "10"
           - name: TOTAL_QPS_LIMIT
-            value: "5"
+            value: "10"
           - name: STATS_INTERVAL_SECONDS
             value: "5"
 

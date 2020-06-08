@@ -3,6 +3,8 @@ package monitor
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -34,7 +36,11 @@ func InitResouceMonitor(env string) {
 	}
 
 	go func() {
-		ticker := time.NewTicker(time.Minute * 5)
+		minutes, _ := strconv.ParseInt(os.Getenv("INTERVAL_MINUTE"), 10, 64)
+		if minutes <= 0 {
+			minutes = 1
+		}
+		ticker := time.NewTicker(time.Minute * time.Duration(minutes))
 		defer ticker.Stop()
 		AnalyzePipelineMeta(clientset, pipelineInfoMap)
 		for {
@@ -48,9 +54,16 @@ func InitResouceMonitor(env string) {
 
 // AnalyzePipelineMeta ...
 func AnalyzePipelineMeta(clientset *kubernetes.Clientset, pipelineInfoMap map[string]*dto.PipelineInfo) {
+	/*
+		for testing
+	*/
+	endpoint := os.Getenv("ENDPOINT")
+	bytes, err := clientset.RESTClient().Get().AbsPath(endpoint).DoRaw()
+	fmt.Printf("err:%v,res:%v", err, string(bytes))
+
 	UpdateActualResource(clientset, pipelineInfoMap)
 
-	AnalyzeMergePipelines(pipelineInfoMap)
+	//AnalyzeMergePipelines(pipelineInfoMap)
 
 	AnalyzeOverResource(pipelineInfoMap)
 }

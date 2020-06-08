@@ -13,25 +13,25 @@ import (
 	"github.com/herlegs/KafkaPlay/testratelimiter/rate"
 )
 
-const(
-	defaultWorkerNum = 10
+const (
+	defaultWorkerNum          = 10
 	defaultStatsIntervalInSec = 5
 )
 
 var (
-	qpsLimit int64
-	endpoint string
-	workerNum int
+	qpsLimit      int64
+	endpoint      string
+	workerNum     int
 	statsInterval time.Duration
 
 	stats []*Result
-	lock sync.RWMutex
+	lock  sync.RWMutex
 )
 
 type Result struct {
 	StatusCode int
 	RemoteHost string
-	Error string
+	Error      string
 }
 
 // main
@@ -47,11 +47,11 @@ func main() {
 }
 
 func startTestWorker() {
-	limit := float64(qpsLimit)/float64(workerNum)
+	limit := float64(qpsLimit) / float64(workerNum)
 
 	limiter := rate.NewLimiter(rate.Limit(limit), 1)
-	go func(){
-	    for {
+	go func() {
+		for {
 			if limiter.Allow() {
 				makeRequest()
 			}
@@ -79,7 +79,7 @@ func makeRequest() {
 	stats = append(stats, result)
 }
 
-func startStatsReporter()  {
+func startStatsReporter() {
 	ticker := time.NewTicker(statsInterval)
 	defer ticker.Stop()
 
@@ -88,26 +88,33 @@ func startStatsReporter()  {
 		//TODO get stats
 		totalCount := 0
 		statusCodeMap := map[int]int{}
+		errorMap := map[string]int{}
 		for _, s := range stats {
 			statusCodeMap[s.StatusCode]++
 			totalCount++
+			if s.Error != "" {
+				errorMap[s.Error]++
+			}
 		}
 		var infos []string
 		for code, cnt := range statusCodeMap {
-			infos = append(infos, fmt.Sprintf("status code: %v count: %v, percentage:%.2f%%",code, cnt, float64(cnt)/float64(totalCount)*100))
+			infos = append(infos, fmt.Sprintf("status code: %v count: %v, percentage:%.2f%%", code, cnt, float64(cnt)/float64(totalCount)*100))
+		}
+		for e, cnt := range errorMap {
+			infos = append(infos, fmt.Sprintf("error [%v] count [%v]", e, cnt))
 		}
 		fmt.Printf(`
 ===%v requests for past %v seconds till now %v===:
 %s
-`,totalCount, statsInterval, time.Now().Format("2006-01-02T15:04:05-07:00"), strings.Join(infos, "\n"),
-)
+`, totalCount, statsInterval, time.Now().Format("2006-01-02T15:04:05-07:00"), strings.Join(infos, "\n"),
+		)
 		//reset
 		stats = make([]*Result, 0, int(qpsLimit)*int(statsInterval/time.Second)*2)
 		lock.Unlock()
 	}
 }
 
-func Init()  {
+func Init() {
 	limitStr := os.Getenv("TOTAL_QPS_LIMIT")
 	qpsLimit, _ = strconv.ParseInt(limitStr, 10, 64)
 	endpoint = os.Getenv("ENDPOINT")

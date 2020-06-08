@@ -22,7 +22,12 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: 100m
+            cpu: 101m
             memory: 100Mi
+        env:
+          - name: ENDPOINT
+            value: "apis/"
+          - name: INTERVAL_MINUTE
+            value: "1"
         ports:
         - containerPort: 8080

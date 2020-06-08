@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/herlegs/KubernetesPlay/simplehttpserver/monitor"
 
 	"github.com/herlegs/ConsulPlay/kv/consul"
 
@@ -23,8 +26,8 @@ var podCount = 1
 
 func main() {
 	fmt.Printf("before init...\n")
-	go initConsulLoop()
-	//monitor.InitResouceMonitor("coban-prd8")
+	//go initConsulLoop()
+	monitor.InitResouceMonitor("coban-prd8")
 	fmt.Printf("starting hello server [%v] at [%v]...\n", version, serverutil.GetIPAddr())
 	http.HandleFunc("/", hello)
 	if err := http.ListenAndServe(":8080", nil); err != nil {
@@ -56,18 +59,26 @@ func callCounterServerViaK8S(input string) string {
 
 // initConsulLoop
 func initConsulLoop() {
-	store, err := consul.NewConsulKVStore()
+	store, err := consul.NewConsulKVStore(consul.DefaultConsulServiceAddr)
 	if err != nil {
 		fmt.Printf("error init new consul client:%v\n", err)
 		return
 	}
 	t := time.NewTicker(time.Second * 15)
-	bytes, err := store.Get("test-key")
+	bytes, err := store.Get("coban/pipelines/sprinkler8-appsflyer/config")
 	if err != nil {
 		fmt.Printf("error get key from consul:%v\n", err)
 	} else {
 		fmt.Printf("get key value:%v\n", string(bytes))
 	}
+
+	p := &pluginMeta{}
+
+	err = json.Unmarshal(bytes, p)
+	if err != nil {
+		fmt.Printf("err unmarshing: %v\n", err)
+	}
+	fmt.Printf("conf: %v\n", string(p.ConfVal))
 
 	for range t.C {
 		bytes, err := store.Get("test-key")
@@ -77,4 +88,11 @@ func initConsulLoop() {
 			fmt.Printf("get key value:%v\n", string(bytes))
 		}
 	}
+}
+
+type pluginMeta struct {
+	IDVal          string          `json:"id"`
+	PathVal        string          `json:"path"`
+	FactoryFuncVal string          `json:"factoryFunc"`
+	ConfVal        json.RawMessage `json:"conf"`
 }

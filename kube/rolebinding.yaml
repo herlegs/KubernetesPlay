@@ -1,11 +1,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: metricrolebinding
+  name: hellometric
 subjects:
   - kind: ServiceAccount
     name: hello
-    namespace: sprinkler8
+    namespace: test
 roleRef:
   kind: ClusterRole
   name: metricrole
