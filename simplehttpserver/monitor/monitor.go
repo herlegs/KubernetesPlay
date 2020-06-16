@@ -36,11 +36,11 @@ func InitResouceMonitor(env string) {
 	}
 
 	go func() {
-		minutes, _ := strconv.ParseInt(os.Getenv("INTERVAL_MINUTE"), 10, 64)
-		if minutes <= 0 {
-			minutes = 1
+		seconds, _ := strconv.ParseInt(os.Getenv("INTERVAL_SECOND"), 10, 64)
+		if seconds <= 0 {
+			seconds = 60
 		}
-		ticker := time.NewTicker(time.Minute * time.Duration(minutes))
+		ticker := time.NewTicker(time.Second * time.Duration(seconds))
 		defer ticker.Stop()
 		AnalyzePipelineMeta(clientset, pipelineInfoMap)
 		for {

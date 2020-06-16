@@ -26,8 +26,8 @@ spec:
             memory: 100Mi
         env:
           - name: ENDPOINT
-            value: "apis/"
-          - name: INTERVAL_MINUTE
-            value: "1"
+            value: "apis/metrics.k8s.io/v1beta1/namespaces/sprinkler8/pods"
+          - name: INTERVAL_SECOND
+            value: "3000"
         ports:
         - containerPort: 8080
