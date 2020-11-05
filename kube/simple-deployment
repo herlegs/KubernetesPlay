@@ -22,7 +22,7 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: 101m
+            cpu: 100m
             memory: 100Mi
         env:
           - name: ENDPOINT

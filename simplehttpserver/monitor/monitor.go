@@ -14,6 +14,7 @@ import (
 
 	"gitlab.myteksi.net/gophers/go/end/tools/pipelinemeta/dto"
 	"gitlab.myteksi.net/gophers/go/end/tools/pipelinemeta/meta"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -57,15 +58,36 @@ func AnalyzePipelineMeta(clientset *kubernetes.Clientset, pipelineInfoMap map[st
 	/*
 		for testing
 	*/
-	endpoint := os.Getenv("ENDPOINT")
-	bytes, err := clientset.RESTClient().Get().AbsPath(endpoint).DoRaw()
-	fmt.Printf("err:%v,res:%v", err, string(bytes))
+	//endpoint := os.Getenv("ENDPOINT")
+	//bytes, err := clientset.RESTClient().Get().AbsPath(endpoint).DoRaw()
+	//fmt.Printf("err:%v,res:%v", err, string(bytes))
+	//clientset.CoreV1().
+	testAPI(clientset)
 
-	UpdateActualResource(clientset, pipelineInfoMap)
+	//UpdateActualResource(clientset, pipelineInfoMap)
 
 	//AnalyzeMergePipelines(pipelineInfoMap)
 
-	AnalyzeOverResource(pipelineInfoMap)
+	//AnalyzeOverResource(pipelineInfoMap)
+}
+
+// testAPI
+func testAPI(clientset *kubernetes.Clientset) {
+	l, err := clientset.CoreV1().Pods("sprinkler8").List(metav1.ListOptions{
+		//LabelSelector: "app=helloapp",
+	})
+	if err != nil {
+		fmt.Printf("error calling api: %v\n", err)
+	}
+
+	fmt.Printf("try listing result...\n")
+	l.Items = l.Items[:8]
+	bytes, err := json.Marshal(l)
+	if err != nil {
+		fmt.Printf("err marshal: %v\n", err)
+	} else {
+		fmt.Printf("%v\n", string(bytes))
+	}
 }
 
 // UpdateActualResource ...
